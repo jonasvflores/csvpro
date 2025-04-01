@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resultados</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Resultados do Processamento</h1>
+    <h2>Antes</h2>
+    <table>
+        <tr>{% for col in cabecalho_antes %}<th>{{ col }}</th>{% endfor %}</tr>
+        {% for linha in dados_antes %}
+            <tr>{% for cel in linha %}<td>{{ cel }}</td>{% endfor %}</tr>
+        {% endfor %}
+    </table>
+
+    <h2>Depois</h2>
+    <table>
+        <tr>{% for col in cabecalho %}<th>{{ col }}</th>{% endfor %}</tr>
+        {% for linha in dados %}
+            <tr>{% for cel in linha %}<td>{{ cel }}</td>{% endfor %}</tr>
+        {% endfor %}
+    </table>
+
+    <a href="{{ url_for('download', filename=filename) }}" download>Baixar CSV Processado</a>
+</body>
+</html>
