@@ -1,27 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Resultados</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados - Processador CSV</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Resultados do Processamento</h1>
-    <h2>Antes</h2>
-    <table>
-        <tr>{% for col in cabecalho_antes %}<th>{{ col }}</th>{% endfor %}</tr>
-        {% for linha in dados_antes %}
-            <tr>{% for cel in linha %}<td>{{ cel }}</td>{% endfor %}</tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <header>
+            <h1>Resultados do Processamento</h1>
+            <p>Veja como seus dados foram transformados.</p>
+        </header>
 
-    <h2>Depois</h2>
-    <table>
-        <tr>{% for col in cabecalho %}<th>{{ col }}</th>{% endfor %}</tr>
-        {% for linha in dados %}
-            <tr>{% for cel in linha %}<td>{{ cel }}</td>{% endfor %}</tr>
-        {% endfor %}
-    </table>
+        <section class="result-section">
+            <h2>Antes</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>{% for col in cabecalho_antes %}<th>{{ col }}</th>{% endfor %}</tr>
+                    </thead>
+                    <tbody>
+                        {% for linha in dados_antes %}
+                            <tr>{% for cel in linha %}<td>{{ cel }}</td>{% endfor %}</tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-    <a href="{{ url_for('download', filename=filename) }}" download>Baixar CSV Processado</a>
+            <h2>Depois</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>{% for col in cabecalho %}<th>{{ col }}</th>{% endfor %}</tr>
+                    </thead>
+                    <tbody>
+                        {% for linha in dados %}
+                            <tr>{% for cel in linha %}<td>{{ cel }}</td>{% endfor %}</tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <a href="{{ url_for('download', filename=filename) }}" class="download-btn">Baixar CSV Processado</a>
+
+        <footer>
+            <p>&copy; 2025 Jonas Flores (@jonasvflores)</p>
+        </footer>
+    </div>
 </body>
 </html>
