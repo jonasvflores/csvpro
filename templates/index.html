@@ -1,49 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR preocupa">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Processador CSV para Chatwoot</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Processador CSV para Chatwoot</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <label>Carregar Arquivo CSV:</label>
-        <input type="file" name="csv_file" accept=".csv" required><br>
+    <div class="container">
+        <header>
+            <h1>Processador CSV para Chatwoot</h1>
+            <p>Carregue, processe e integre sua base de contatos com facilidade.</p>
+        </header>
 
-        <h3>Opções de Formatação</h3>
-        <label><input type="checkbox" name="dividir_telefones"> Dividir linhas com múltiplos telefones</label><br>
-        
-        <label><input type="checkbox" name="capitalize"> Capitalizar nomes</label><br>
-        <div id="capitalize_options">
-            <label>Colunas a capitalizar:</label><br>
-            <!-- Colunas serão preenchidas dinamicamente via JS ou backend -->
-        </div>
+        <form method="POST" enctype="multipart/form-data" class="form-container">
+            <section class="upload-section">
+                <h2>Carregar Arquivo</h2>
+                <div class="file-upload">
+                    <input type="file" name="csv_file" id="csv_file" accept=".csv" required>
+                    <label for="csv_file">Escolher arquivo CSV</label>
+                </div>
+            </section>
 
-        <label><input type="checkbox" name="formatar_data"> Formatar datas</label><br>
-        <div id="data_options">
-            <label>Formato de saída:</label>
-            <select name="formato_data">
-                <option value="mm-dd-aaaa">mm-dd-aaaa</option>
-                <option value="dd-mm-aaaa" selected>dd-mm-aaaa</option>
-                <option value="aaaa-mm-dd">aaaa-mm-dd</option>
-            </select><br>
-        </div>
+            <section class="options-section">
+                <h2>Opções de Formatação</h2>
+                <div class="option-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="dividir_telefones"> Dividir linhas com múltiplos telefones
+                    </label>
+                </div>
 
-        <h3>Enviar para Chatwoot</h3>
-        <label><input type="checkbox" name="send_to_chatwoot"> Enviar diretamente ao Chatwoot</label><br>
-        <div id="chatwoot_options">
-            <label>URL do Chatwoot:</label>
-            <input type="text" name="chatwoot_url" value="https://app.chatwoot.com"><br>
-            <label>Account ID:</label>
-            <input type="text" name="account_id" required><br>
-            <label>API Key:</label>
-            <input type="text" name="api_key" required><br>
-        </div>
+                <div class="option-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="capitalize" id="capitalize"> Capitalizar nomes
+                    </label>
+                    <div class="sub-options" id="capitalize_options">
+                        <label>Colunas a capitalizar:</label>
+                        <div class="checkbox-list">
+                            <!-- Colunas podem ser preenchidas dinamicamente via JS ou backend -->
+                            <p>(Carregue um arquivo para ver as colunas)</p>
+                        </div>
+                    </div>
+                </div>
 
-        <button type="submit">Processar</button>
-    </form>
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
+                <div class="option-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="formatar_data" id="formatar_data"> Formatar datas
+                    </label>
+                    <div class="sub-options" id="data_options">
+                        <label>Formato de saída:</label>
+                        <select name="formato_data">
+                            <option value="mm-dd-aaaa">mm-dd-aaaa</option>
+                            <option value="dd-mm-aaaa" selected>dd-mm-aaaa</option>
+                            <option value="aaaa-mm-dd">aaaa-mm-dd</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="chatwoot-section">
+                <h2>Enviar para Chatwoot</h2>
+                <div class="option-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="send_to_chatwoot" id="send_to_chatwoot"> Enviar diretamente ao Chatwoot
+                    </label>
+                    <div class="sub-options" id="chatwoot_options">
+                        <label>URL do Chatwoot:</label>
+                        <input type="text" name="chatwoot_url" value="https://app.chatwoot.com" placeholder="Ex.: https://app.chatwoot.com">
+                        <label>Account ID:</label>
+                        <input type="text" name="account_id" placeholder="Digite o ID da conta" required>
+                        <label>API Key:</label>
+                        <input type="text" name="api_key" placeholder="Digite a chave da API" required>
+                    </div>
+                </div>
+            </section>
+
+            <button type="submit" class="submit-btn">Processar</button>
+        </form>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <footer>
+            <p>&copy; 2025 Jonas Flores (@jonasvflores)</p>
+        </footer>
+    </div>
+
+    <script>
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const subOptions = this.parentElement.nextElementSibling;
+                if (subOptions && subOptions.classList.contains('sub-options')) {
+                    subOptions.style.display = this.checked ? 'block' : 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
