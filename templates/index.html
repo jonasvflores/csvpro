@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processador CSV para Chatwoot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Processador CSV para Chatwoot</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Carregar Arquivo CSV:</label>
+        <input type="file" name="csv_file" accept=".csv" required><br>
+
+        <h3>Opções de Formatação</h3>
+        <label><input type="checkbox" name="dividir_telefones"> Dividir linhas com múltiplos telefones</label><br>
+        
+        <label><input type="checkbox" name="capitalize"> Capitalizar nomes</label><br>
+        <div id="capitalize_options">
+            <label>Colunas a capitalizar:</label><br>
+            <!-- Colunas serão preenchidas dinamicamente via JS ou backend -->
+        </div>
+
+        <label><input type="checkbox" name="formatar_data"> Formatar datas</label><br>
+        <div id="data_options">
+            <label>Formato de saída:</label>
+            <select name="formato_data">
+                <option value="mm-dd-aaaa">mm-dd-aaaa</option>
+                <option value="dd-mm-aaaa" selected>dd-mm-aaaa</option>
+                <option value="aaaa-mm-dd">aaaa-mm-dd</option>
+            </select><br>
+        </div>
+
+        <h3>Enviar para Chatwoot</h3>
+        <label><input type="checkbox" name="send_to_chatwoot"> Enviar diretamente ao Chatwoot</label><br>
+        <div id="chatwoot_options">
+            <label>URL do Chatwoot:</label>
+            <input type="text" name="chatwoot_url" value="https://app.chatwoot.com"><br>
+            <label>Account ID:</label>
+            <input type="text" name="account_id" required><br>
+            <label>API Key:</label>
+            <input type="text" name="api_key" required><br>
+        </div>
+
+        <button type="submit">Processar</button>
+    </form>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
