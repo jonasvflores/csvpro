@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR preocupa">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
             <p>Carregue, processe e integre sua base de contatos com facilidade.</p>
         </header>
 
-        <form method="POST" enctype="multipart/form-data" class="form-container">
+        <form method="POST" enctype="multipart/form-data" class="form-container" id="csvForm">
             <section class="upload-section">
                 <h2>Carregar Arquivo</h2>
                 <div class="file-upload">
@@ -37,9 +37,8 @@
                     </label>
                     <div class="sub-options" id="capitalize_options">
                         <label>Colunas a capitalizar:</label>
-                        <div class="checkbox-list">
-                            <!-- Colunas podem ser preenchidas dinamicamente via JS ou backend -->
-                            <p>(Carregue um arquivo para ver as colunas)</p>
+                        <div class="checkbox-list" id="columns_list">
+                            <p>Carregue um arquivo para ver as colunas.</p>
                         </div>
                     </div>
                 </div>
@@ -84,17 +83,56 @@
         {% endif %}
 
         <footer>
-            <p>&copy; 2025 Jonas Flores (@jonasvflores)</p>
+            <p>© 2025 Jonas Flores (@jonasvflores)</p>
         </footer>
     </div>
 
     <script>
+        // Mostrar/esconder sub-opções
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const subOptions = this.parentElement.nextElementSibling;
                 if (subOptions && subOptions.classList.contains('sub-options')) {
                     subOptions.style.display = this.checked ? 'block' : 'none';
                 }
+            });
+        });
+
+        // Carregar colunas dinamicamente ao selecionar o arquivo
+        document.getElementById('csv_file').addEventListener('change', function() {
+            const fileInput = this;
+            if (fileInput.files.length === 0) return;
+
+            const formData = new FormData();
+            formData.append('csv_file', fileInput.files[0]);
+
+            fetch('/get_columns', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                const columnsList = document.getElementById('columns_list');
+                columnsList.innerHTML = ''; // Limpa o placeholder
+
+                data.columns.forEach(column => {
+                    const label = document.createElement('label');
+                    label.className = 'checkbox-label';
+                    label.innerHTML = `
+                        <input type="checkbox" name="colunas_capitalize" value="${column}">
+                        ${column}
+                    `;
+                    columnsList.appendChild(label);
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao carregar colunas:', error);
+                alert('Erro ao carregar as colunas do arquivo.');
             });
         });
     </script>
