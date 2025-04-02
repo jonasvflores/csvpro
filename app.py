@@ -3,7 +3,7 @@ import csv
 import re
 from datetime import datetime
 from dateutil.parser import parse
-from flask import Flask, render_template, request, send_file, Response
+from flask import Flask, render_template, request, send_file, Response, jsonify
 import requests
 
 app = Flask(__name__)
@@ -42,6 +42,24 @@ def formatar_data(texto, formato_saida):
             return data.strftime('%Y-%m-%d')
     except ValueError:
         return texto
+
+@app.route('/get_columns', methods=['POST'])
+def get_columns():
+    file = request.files.get('csv_file')
+    if not file or not file.filename.endswith('.csv'):
+        return jsonify({'error': 'Por favor, envie um arquivo CSV válido.'}), 400
+
+    try:
+        # Lê o arquivo CSV e extrai o cabeçalho
+        file.seek(0)
+        reader = csv.reader(file.read().decode('utf-8').splitlines(), delimiter=';')
+        linhas = list(reader)
+        if not linhas:
+            return jsonify({'error': 'Arquivo CSV vazio.'}), 400
+        cabecalho = linhas[0]
+        return jsonify({'columns': cabecalho})
+    except Exception as e:
+        return jsonify({'error': f'Erro ao processar o arquivo: {str(e)}'}), 500
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
